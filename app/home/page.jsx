@@ -17,7 +17,7 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     
     const fetchCharacters = async (name, pageNumber) => {
-        setLoading(true); // Ativa o estado de carregamento
+        setLoading(true);
         try {
             const { data } = await axios.get(`https://rickandmortyapi.com/api/character/?page=${pageNumber}&name=${name}`);
             setCharacters(data.results);
@@ -27,7 +27,7 @@ export default function Home() {
             setCharacters([]);
             setNotFound(true);
         } finally {
-            setLoading(false); // Desativa o estado de carregamento
+            setLoading(false);
         }
 
         try {
