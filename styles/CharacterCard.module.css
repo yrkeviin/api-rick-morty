@@ -6,7 +6,7 @@
     flex-direction: column;
     margin: auto;
     color: black;
-    transition: .3s ease-in-out;
+    transition: .5s ease-in-out;
     border-radius: 10px;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 20px;
@@ -20,7 +20,8 @@
     scale: 1.05;
     background-color: #f0f0f0;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: .3s ease-in-out;
+    border-radius: 40px;
 }
 
 .title {

@@ -1,40 +1,55 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import styles from "../home/Home.module.css"
+import { useEffect, useState } from "react";
+import CharacterCard from "../../components/CharacterCard";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-import CharacterCard from '../../components/CharacterCard';
-
-import styles from "./Home.module.css"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
-    const [search, setSearch] = useState('');
-    const [notFound, setNotFound] = useState(false);
+    const [search, setSearch] = useState("");
     const [characters, setCharacters] = useState([]);
+    const [notFound, setNotFound] = useState(false);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
-    const fetchCharacters = async (name = "") => {
-        setNotFound(false);
+    const fetchCharacters = async (name, pageNumber) => {
         try {
-            const { data } = await axios.get(`https://rickandmortyapi.com/api/character/?name=${name}`);
+            const { data } = await axios.get(`https://rickandmortyapi.com/api/character/?page=${pageNumber}&name=${name}`);
             setCharacters(data.results);
-        } catch (error) {
+            setTotalPages(data.info.pages);
+            setNotFound(false);
+        } catch {
             setCharacters([]);
             setNotFound(true);
         }
     };
+    useEffect(() => {
+        fetchCharacters(search.trim(), page);
+    }, [page]);
 
     useEffect(() => {
-        fetchCharacters();
-    }, []);
+        fetchCharacters(search, page);
+    }, [search]);
+
+    const handleSearch = () =>{
+        const name = search.trim();
+        setPage(1);
+        fetchCharacters(name, 1);
+    };
+
+    const handleReset = () => {
+        setSearch("");
+        setPage(1);
+        fetchCharacters("", 1);
+        toast.success("filtro foi resetado", {position: "top-left"});
+    }   
 
     const handleCardClick = (name) => {
-        toast.info(`Você clicou no personagem: ${name}`, {
+        toast.info(`Você clicou em ${name}`, {
         });
     }
-
-    console.log(characters);
 
     return (
         <div className={styles.container}>
@@ -55,23 +70,48 @@ export default function Home() {
                     🔎
                 </button>
 
-                <button onClick={() => {
-                    setSearch("");
-                    fetchCharacters();
+                <button 
+                onClick={() => {
+                setSearch("");
+                fetchCharacters();
                 }}
                 className={styles.buttonReset}>
                     🗑
                 </button>
             </div>
-            {notFound && (
-                <h1 className={styles.notFound}>Personagem não encontrado!</h1>
-            )}
 
-            <div className={styles.grid}>
-            {characters.map((char) => (
-                <CharacterCard key={char.id} character={char} onClick={() => handleCardClick (char.nome)} />
-            ))}
+            <div className={styles.buttonPageNav}>
+                <button
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+                className={styles.buttonNav}
+                >
+                    Página anterior
+                </button>
+
+                <button
+                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                disabled={page === totalPages}
+                className={styles.buttonNav}
+                >
+                    Próxima página
+                </button>
+                    
+                {notFound && (
+                <h1 className={styles.notFound}>Personagem não encontrado!</h1>
+                )}
+
             </div>
+
+<div className={styles.grid}>
+    {characters.map((char) => (
+        <CharacterCard
+            key={char.id}
+            character={char}
+            onClick={() => handleCardClick(char.name)}
+        />
+    ))}
+</div>
         </div>
     )
 }
