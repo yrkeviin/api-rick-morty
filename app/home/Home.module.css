@@ -92,6 +92,15 @@
     scale: 1.05;
 }
 
+.notFound  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 2%;
+}
+
 .pageIndicator {
     font-family: 'Poppins', sans-serif;
 }

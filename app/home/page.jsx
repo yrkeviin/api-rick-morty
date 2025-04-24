@@ -115,11 +115,12 @@ export default function Home() {
                 >
                     Próxima página
                 </button>
-                    
-                {notFound && (
-                <h1 className={styles.notFound}>Personagem não encontrado!</h1>
-                )}
             </div>
+
+                {notFound && (
+                <h1 className={styles.notFound}>Personagem não encontrado!!</h1>
+                )}
+                
                 {loading ? (
                     <div className={`${styles.loaderWrapper} ${loading ? "" : styles.hidden}`}>
                         <Loader />
