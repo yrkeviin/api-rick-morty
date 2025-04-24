@@ -91,3 +91,7 @@
     cursor: pointer;
     scale: 1.05;
 }
+
+.pageIndicator {
+    font-family: 'Poppins', sans-serif;
+}

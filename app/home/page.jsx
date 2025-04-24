@@ -6,6 +6,7 @@ import CharacterCard from "../../components/CharacterCard";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../components/Loader";
 
 export default function Home() {
     const [search, setSearch] = useState("");
@@ -13,8 +14,22 @@ export default function Home() {
     const [notFound, setNotFound] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
+    const [loading, setLoading] = useState(true);
+    
     const fetchCharacters = async (name, pageNumber) => {
+        setLoading(true); // Ativa o estado de carregamento
+        try {
+            const { data } = await axios.get(`https://rickandmortyapi.com/api/character/?page=${pageNumber}&name=${name}`);
+            setCharacters(data.results);
+            setTotalPages(data.info.pages);
+            setNotFound(false);
+        } catch {
+            setCharacters([]);
+            setNotFound(true);
+        } finally {
+            setLoading(false); // Desativa o estado de carregamento
+        }
+
         try {
             const { data } = await axios.get(`https://rickandmortyapi.com/api/character/?page=${pageNumber}&name=${name}`);
             setCharacters(data.results);
@@ -104,8 +119,20 @@ export default function Home() {
                 {notFound && (
                 <h1 className={styles.notFound}>Personagem não encontrado!</h1>
                 )}
-
             </div>
+                {loading ? (
+                    <div className={`${styles.loaderWrapper} ${loading ? "" : styles.hidden}`}>
+                        <Loader />
+                    </div>
+                ) : (
+                    <div className={styles.grid}>
+                        {characters.map((char) => (
+                            <CharacterCard key={char.id} character={char} onClick={() => handleCardClick(char)} />
+                        ))}
+                    </div>
+                )}
+
+            
 
 <div className={styles.grid}>
     {characters.map((char) => (
