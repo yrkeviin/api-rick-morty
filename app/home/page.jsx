@@ -89,6 +89,10 @@ export default function Home() {
                     Página anterior
                 </button>
 
+                <span className={styles.pageIndicator}>
+                    Página {page} de {totalPages}
+                </span>
+
                 <button
                 onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                 disabled={page === totalPages}
